@@ -53,7 +53,7 @@ export interface ISkillRepository extends BaseRepository<Skill> {
 
 // Skill Section Repository
 export interface ISkillSectionRepository extends BaseRepository<SkillSection> {
-  // No additional methods needed beyond BaseRepository
+  // Extends base repository
 }
 
 // Certification Repository
@@ -63,7 +63,7 @@ export interface ICertificationRepository extends BaseRepository<Certification> 
 
 // Education Repository
 export interface IEducationRepository extends BaseRepository<Education> {
-  // No additional methods needed beyond BaseRepository
+  // Extends base repository
 }
 
 // Contact Repository

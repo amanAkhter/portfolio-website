@@ -61,6 +61,10 @@ export class PortfolioService {
     return data || homeConfig;
   }
 
+  async getHomeDataAdmin(): Promise<HomeData | null> {
+    return await this.homeRepo.get();
+  }
+
   async updateHomeData(data: HomeData): Promise<HomeData> {
     return await this.homeRepo.update(data);
   }
@@ -71,6 +75,10 @@ export class PortfolioService {
     return data || aboutConfig;
   }
 
+  async getAboutDataAdmin(): Promise<AboutData | null> {
+    return await this.aboutRepo.get();
+  }
+
   async updateAboutData(data: AboutData): Promise<AboutData> {
     return await this.aboutRepo.update(data);
   }
@@ -79,6 +87,10 @@ export class PortfolioService {
   async getAllExperiences(): Promise<Experience[]> {
     const data = await this.experienceRepo.getAll();
     return data.length > 0 ? data : experiencesConfig;
+  }
+
+  async getAllExperiencesAdmin(): Promise<Experience[]> {
+    return await this.experienceRepo.getAll();
   }
 
   async getExperienceById(id: string): Promise<Experience | null> {
@@ -108,6 +120,10 @@ export class PortfolioService {
     return data.length > 0 ? data : projectsConfig;
   }
 
+  async getAllProjectsAdmin(): Promise<Project[]> {
+    return await this.projectRepo.getAll();
+  }
+
   async getFeaturedProjects(): Promise<Project[]> {
     const data = await this.projectRepo.getFeatured();
     return data.length > 0 ? data : projectsConfig.filter(p => p.featured);
@@ -133,6 +149,10 @@ export class PortfolioService {
   async getAllSkills(): Promise<Skill[]> {
     const data = await this.skillRepo.getAll();
     return data.length > 0 ? data : skillsConfig;
+  }
+
+  async getAllSkillsAdmin(): Promise<Skill[]> {
+    return await this.skillRepo.getAll();
   }
 
   async getSkillsBySection(section: string): Promise<Skill[]> {
@@ -162,6 +182,10 @@ export class PortfolioService {
     return data.length > 0 ? data : skillSectionsConfig;
   }
 
+  async getAllSkillSectionsAdmin(): Promise<SkillSection[]> {
+    return await this.skillSectionRepo.getAll();
+  }
+
   async getSkillSectionById(id: string): Promise<SkillSection | null> {
     return await this.skillSectionRepo.getById(id);
   }
@@ -182,6 +206,10 @@ export class PortfolioService {
   async getAllCertifications(): Promise<Certification[]> {
     const data = await this.certificationRepo.getAll();
     return data.length > 0 ? data : certificationsConfig;
+  }
+
+  async getAllCertificationsAdmin(): Promise<Certification[]> {
+    return await this.certificationRepo.getAll();
   }
 
   async getFeaturedCertifications(): Promise<Certification[]> {
@@ -211,6 +239,10 @@ export class PortfolioService {
     return data.length > 0 ? data : educationsConfig;
   }
 
+  async getAllEducationsAdmin(): Promise<Education[]> {
+    return await this.educationRepo.getAll();
+  }
+
   async getEducationById(id: string): Promise<Education | null> {
     return await this.educationRepo.getById(id);
   }
@@ -231,6 +263,10 @@ export class PortfolioService {
   async getContactInfo(): Promise<ContactInfo> {
     const data = await this.contactRepo.get();
     return data || contactConfig;
+  }
+
+  async getContactInfoAdmin(): Promise<ContactInfo | null> {
+    return await this.contactRepo.get();
   }
 
   async updateContactInfo(data: ContactInfo): Promise<ContactInfo> {

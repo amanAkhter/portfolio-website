@@ -1,6 +1,7 @@
 // UI Components Barrel Export
 export * from './Button'
 export * from './Input'
+export * from './FormInput'
 export * from './Textarea'
 export * from './Card'
 export * from './Badge'
@@ -8,3 +9,4 @@ export * from './Progress'
 export * from './Modal'
 export * from './Animations'
 export * from './Loading'
+export * from './EmptyState'
