@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion } from 'motion/react'
 import { FadeIn, SlideIn } from '../ui/Animations'
 import { Card, CardContent } from '../ui/Card'
 import { Button } from '../ui/Button'
@@ -97,10 +98,10 @@ export const Contact: React.FC = () => {
   ]
 
   return (
-    <section id="contact" className="py-20 bg-tokyo-bg">
+    <section id="contact" className="py-12 bg-tokyo-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-tokyo-fg mb-4">
               Get In Touch
             </h2>
@@ -177,19 +178,32 @@ export const Contact: React.FC = () => {
                 </h4>
                 <div className="flex gap-4">
                   {socialLinks.map((social, index) => (
-                    <a
+                    <motion.div
                       key={index}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 rounded-lg bg-tokyo-bg-light hover:bg-tokyo-blue/20 border border-tokyo-comment/20 hover:border-tokyo-blue transition-all group"
-                      aria-label={social.label}
+                      whileHover={{ scale: 1.15, rotate: 360 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ duration: 0.6 }}
+                      className="relative"
                     >
-                      <social.icon
-                        size={24}
-                        className="text-tokyo-fg group-hover:text-tokyo-blue transition-colors"
-                      />
-                    </a>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 flex items-center justify-center rounded-full border-2 border-tokyo-blue/30 hover:border-tokyo-blue bg-tokyo-bg-dark/60 hover:bg-tokyo-blue/10 transition-all duration-300 backdrop-blur-sm relative"
+                        aria-label={social.label}
+                        style={{
+                          boxShadow: '0 4px 14px 0 rgba(122, 162, 247, 0.15)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = '0 6px 20px 0 rgba(122, 162, 247, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(122, 162, 247, 0.15)';
+                        }}
+                      >
+                        <social.icon className="h-6 w-6 text-tokyo-blue" />
+                      </a>
+                    </motion.div>
                   ))}
                 </div>
               </div>

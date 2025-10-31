@@ -12,6 +12,7 @@ import type {
   Education,
   ContactInfo,
   ContactSubmission,
+  User,
 } from '../domain/entities';
 import type {
   IHomeRepository,
@@ -42,18 +43,40 @@ import {
 } from '../../shared/constants/configuration';
 
 export class PortfolioService {
+  homeRepo: IHomeRepository;
+  aboutRepo: IAboutRepository;
+  experienceRepo: IExperienceRepository;
+  projectRepo: IProjectRepository;
+  skillRepo: ISkillRepository;
+  skillSectionRepo: ISkillSectionRepository;
+  certificationRepo: ICertificationRepository;
+  educationRepo: IEducationRepository;
+  contactRepo: IContactRepository;
+  contactSubmissionRepo: IContactSubmissionRepository;
+
   constructor(
-    private homeRepo: IHomeRepository,
-    private aboutRepo: IAboutRepository,
-    private experienceRepo: IExperienceRepository,
-    private projectRepo: IProjectRepository,
-    private skillRepo: ISkillRepository,
-    private skillSectionRepo: ISkillSectionRepository,
-    private certificationRepo: ICertificationRepository,
-    private educationRepo: IEducationRepository,
-    private contactRepo: IContactRepository,
-    private contactSubmissionRepo: IContactSubmissionRepository
-  ) {}
+    homeRepo: IHomeRepository,
+    aboutRepo: IAboutRepository,
+    experienceRepo: IExperienceRepository,
+    projectRepo: IProjectRepository,
+    skillRepo: ISkillRepository,
+    skillSectionRepo: ISkillSectionRepository,
+    certificationRepo: ICertificationRepository,
+    educationRepo: IEducationRepository,
+    contactRepo: IContactRepository,
+    contactSubmissionRepo: IContactSubmissionRepository
+  ) {
+    this.homeRepo = homeRepo;
+    this.aboutRepo = aboutRepo;
+    this.experienceRepo = experienceRepo;
+    this.projectRepo = projectRepo;
+    this.skillRepo = skillRepo;
+    this.skillSectionRepo = skillSectionRepo;
+    this.certificationRepo = certificationRepo;
+    this.educationRepo = educationRepo;
+    this.contactRepo = contactRepo;
+    this.contactSubmissionRepo = contactSubmissionRepo;
+  }
 
   // ========== HOME SERVICES ==========
   async getHomeData(): Promise<HomeData> {
@@ -296,13 +319,23 @@ export class PortfolioService {
 }
 
 export class AuthService {
+  authRepo: IAuthRepository;
+  userRepo: IUserRepository;
+
   constructor(
-    private authRepo: IAuthRepository,
-    private userRepo: IUserRepository
-  ) {}
+    authRepo: IAuthRepository,
+    userRepo: IUserRepository
+  ) {
+    this.authRepo = authRepo;
+    this.userRepo = userRepo;
+  }
 
   async signIn(email: string, password: string) {
     return await this.authRepo.signIn(email, password);
+  }
+
+  async signInWithGoogle() {
+    return await this.authRepo.signInWithGoogle();
   }
 
   async signOut() {
@@ -317,7 +350,7 @@ export class AuthService {
     return await this.userRepo.isAdmin(uid);
   }
 
-  onAuthStateChanged(callback: (user: any) => void) {
+  onAuthStateChanged(callback: (user: User | null) => void) {
     return this.authRepo.onAuthStateChanged(callback);
   }
 }

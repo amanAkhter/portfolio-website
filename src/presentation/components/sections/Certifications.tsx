@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import { portfolioService } from '../../../core/usecases'
 import { ScrollReveal, FadeIn, ScaleOnHover } from '../ui/Animations'
 import { Card, CardContent } from '../ui/Card'
@@ -26,10 +27,10 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
   return (
     <ScaleOnHover>
       <Card
-        className="cursor-pointer hover:border-tokyo-purple transition-all duration-300 group overflow-hidden h-full"
+        className="cursor-pointer hover:border-tokyo-purple hover:shadow-2xl hover:shadow-tokyo-purple/20 transition-all duration-500 group overflow-hidden h-[480px] flex flex-col"
         onClick={onClick}
       >
-        <div className="relative aspect-video overflow-hidden bg-tokyo-bg-light">
+        <div className="relative aspect-video overflow-hidden bg-tokyo-bg-light flex-shrink-0">
           {certification.coverImage ? (
             <img
               src={certification.coverImage}
@@ -42,28 +43,28 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
             </div>
           )}
           {certification.featured && (
-            <Badge className="absolute top-4 right-4 bg-tokyo-yellow text-tokyo-bg font-semibold flex items-center gap-1">
+            <Badge className="absolute top-4 right-4 bg-tokyo-magenta text-white font-semibold flex items-center gap-1 shadow-lg shadow-tokyo-magenta/50">
               <Star size={14} fill="currentColor" />
               Featured
             </Badge>
           )}
         </div>
 
-        <CardContent className="p-6">
-          <h3 className="text-lg font-bold text-tokyo-fg mb-2 group-hover:text-tokyo-purple transition-colors line-clamp-2">
+        <CardContent className="p-6 flex-1 flex flex-col min-h-0">
+          <h3 className="text-lg font-bold text-tokyo-fg mb-2 group-hover:text-tokyo-purple transition-colors line-clamp-2 min-h-[56px]">
             {certification.title}
           </h3>
-          <p className="text-tokyo-cyan font-medium mb-2">
+          <p className="text-tokyo-cyan font-medium mb-2 truncate">
             {certification.issuingOrganization}
           </p>
           <p className="text-tokyo-comment text-sm mb-4">{certification.year}</p>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 overflow-hidden max-h-[80px] items-center">
             {certification.skills.slice(0, 3).map((skill, i) => (
               <Badge
                 key={i}
                 variant="secondary"
-                className="bg-tokyo-bg-light border-tokyo-comment/30 text-xs"
+                className="bg-tokyo-bg-light border-tokyo-comment/30 text-xs truncate"
               >
                 {skill}
               </Badge>
@@ -71,7 +72,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
             {certification.skills.length > 3 && (
               <Badge
                 variant="secondary"
-                className="bg-tokyo-purple/20 text-tokyo-purple border-tokyo-purple/50 text-xs"
+                className="bg-tokyo-purple/20 text-tokyo-purple border-tokyo-purple/50 text-xs flex-shrink-0 font-semibold shadow-sm hover:shadow-tokyo-purple/30 transition-shadow"
               >
                 +{certification.skills.length - 3}
               </Badge>
@@ -156,19 +157,22 @@ const CertificationModal: React.FC<CertificationModalProps> = ({
       <ModalFooter>
         <div className="flex gap-3">
           {certification.certificateUrl && (
-            <Button
-              onClick={() =>
-                window.open(certification.certificateUrl, '_blank')
-              }
-              className="bg-tokyo-purple hover:bg-tokyo-purple/80"
+            <motion.div 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
             >
-              <ExternalLink size={18} className="mr-2" />
-              View Certificate
-            </Button>
+              <Button
+                onClick={() =>
+                  window.open(certification.certificateUrl, '_blank')
+                }
+                className="bg-tokyo-purple hover:bg-tokyo-purple/80 transition-all duration-300"
+              >
+                <ExternalLink size={18} className="mr-2" />
+                View Certificate
+              </Button>
+            </motion.div>
           )}
-          <Button variant="ghost" onClick={onClose}>
-            Close
-          </Button>
         </div>
       </ModalFooter>
     </Modal>

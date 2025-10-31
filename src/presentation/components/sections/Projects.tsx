@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import { portfolioService } from '../../../core/usecases'
-import { ScrollReveal, FadeIn, ScaleOnHover } from '../ui/Animations'
+import { ScrollReveal, FadeIn } from '../ui/Animations'
+import { TiltCard, NeonBorder, HolographicShimmer } from '../ui/AdvancedAnimations'
 import { Card, CardContent } from '../ui/Card'
 import { Badge } from '../ui/Badge'
 import { Button } from '../ui/Button'
@@ -21,63 +23,70 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
-    <ScaleOnHover>
-      <Card
-        className="cursor-pointer hover:border-tokyo-blue transition-all duration-300 group overflow-hidden h-full"
-        onClick={onClick}
-      >
-        <div className="relative aspect-video overflow-hidden bg-tokyo-bg-light">
-          {project.coverImage ? (
-            <img
-              src={project.coverImage}
-              alt={project.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-tokyo-comment">
-              <TagIcon size={48} />
-            </div>
-          )}
-          {project.featured && (
-            <Badge className="absolute top-4 right-4 bg-tokyo-yellow text-tokyo-bg font-semibold">
-              Featured
-            </Badge>
-          )}
-          <Badge className="absolute bottom-4 right-4 bg-tokyo-bg/80 backdrop-blur-sm">
-            {project.year}
-          </Badge>
-        </div>
-
-        <CardContent className="p-6">
-          <h3 className="text-xl font-bold text-tokyo-fg mb-2 group-hover:text-tokyo-blue transition-colors">
-            {project.name}
-          </h3>
-          <p className="text-tokyo-fg-dark mb-4 line-clamp-2">
-            {project.shortDescription}
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {project.technologies.slice(0, 3).map((tech, i) => (
-              <Badge
-                key={i}
-                variant="secondary"
-                className="bg-tokyo-bg-light border-tokyo-comment/30 text-xs"
-              >
-                {tech}
-              </Badge>
-            ))}
-            {project.technologies.length > 3 && (
-              <Badge
-                variant="secondary"
-                className="bg-tokyo-blue/20 text-tokyo-blue border-tokyo-blue/50 text-xs"
-              >
-                +{project.technologies.length - 3}
+    <TiltCard>
+      <NeonBorder color="tokyo-blue">
+        <Card
+          className="cursor-pointer hover:border-tokyo-blue hover:shadow-2xl hover:shadow-tokyo-blue/20 transition-all duration-500 group overflow-hidden h-[420px] flex flex-col bg-transparent hover:bg-tokyo-bg-dark"
+          onClick={onClick}
+        >
+          <div className="relative aspect-video overflow-hidden bg-tokyo-bg-light flex-shrink-0">
+            <HolographicShimmer>
+              {project.coverImage ? (
+                <img
+                  src={project.coverImage}
+                  alt={project.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-tokyo-comment">
+                  <TagIcon size={48} />
+                </div>
+              )}
+            </HolographicShimmer>
+            {project.featured && (
+              <Badge className="absolute top-4 right-4 bg-tokyo-cyan text-tokyo-bg-dark font-semibold shadow-lg shadow-tokyo-cyan/50">
+                Featured
               </Badge>
             )}
+            <div className="absolute inset-0 bg-gradient-to-t from-tokyo-bg/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
-        </CardContent>
-      </Card>
-    </ScaleOnHover>
+
+          <CardContent className="p-6 flex-1 flex flex-col">
+            <h3 className="text-xl font-bold text-tokyo-fg mb-2 group-hover:text-tokyo-blue transition-colors line-clamp-2 min-h-[56px]">
+              {project.name}
+            </h3>
+            <p className="text-tokyo-fg-dark mb-4 line-clamp-3 flex-1">
+              {project.shortDescription}
+            </p>
+
+            <div className="space-y-3 mt-auto">
+              <Badge className="bg-tokyo-bg-dark border-tokyo-blue/30 text-tokyo-blue text-xs font-semibold">
+                {project.year}
+              </Badge>
+              <div className="flex flex-wrap gap-2 items-center">
+                {project.technologies.slice(0, 3).map((tech, i) => (
+                  <Badge
+                    key={i}
+                    variant="secondary"
+                    className="bg-tokyo-bg-light border-tokyo-comment/30 text-xs hover:border-tokyo-blue/50 transition-colors"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+                {project.technologies.length > 3 && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-tokyo-blue/20 text-tokyo-blue border-tokyo-blue/50 text-xs"
+                  >
+                    +{project.technologies.length - 3}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </NeonBorder>
+    </TiltCard>
   )
 }
 
@@ -103,19 +112,23 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalHeader>
-        <ModalTitle className="text-2xl">{project.name}</ModalTitle>
+        <ModalTitle className="text-2xl">
+          {project.name}
+        </ModalTitle>
       </ModalHeader>
       <ModalBody>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {project.coverImage && (
             <div className="relative aspect-video overflow-hidden rounded-lg bg-tokyo-bg-light">
-              <img
-                src={project.coverImage}
-                alt={project.name}
-                className="w-full h-full object-cover"
-              />
+              <HolographicShimmer>
+                <img
+                  src={project.coverImage}
+                  alt={project.name}
+                  className="w-full h-full object-cover"
+                />
+              </HolographicShimmer>
             </div>
           )}
 
@@ -126,7 +139,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-tokyo-fg mb-3">
+            <h4 className="text-sm font-semibold text-tokyo-fg mb-2 flex items-center gap-2">
+              <span className="w-1 h-4 bg-tokyo-blue rounded-full"></span>
               Technologies Used
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -134,7 +148,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                 <Badge
                   key={i}
                   variant="secondary"
-                  className="bg-tokyo-bg-light border-tokyo-comment/30"
+                  className="bg-tokyo-bg-light border-tokyo-comment/30 hover:border-tokyo-blue/50 transition-colors"
                 >
                   {tech}
                 </Badge>
@@ -144,25 +158,26 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
 
           {project.tags && project.tags.length > 0 && (
             <div>
-              <h4 className="text-lg font-semibold text-tokyo-fg mb-3">
+              <h4 className="text-sm font-semibold text-tokyo-fg mb-2 flex items-center gap-2">
+                <span className="w-1 h-4 bg-tokyo-purple rounded-full"></span>
                 Features & Highlights
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {project.tags.map((tag: ProjectTag, i) => {
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {project.tags.slice(0, 4).map((tag: ProjectTag, i) => {
                   const IconComponent = getIconComponent(tag.icon)
                   return (
                     <div
                       key={i}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-tokyo-bg-light border border-tokyo-comment/20"
+                      className="flex items-start gap-2 p-2 rounded-lg bg-tokyo-bg-light border border-tokyo-comment/20 hover:border-tokyo-blue/50 transition-colors"
                     >
-                      <div className="p-2 rounded-md bg-tokyo-blue/20">
-                        <IconComponent size={20} className="text-tokyo-blue" />
+                      <div className="p-1.5 rounded-md bg-tokyo-blue/20">
+                        <IconComponent size={16} className="text-tokyo-blue" />
                       </div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-tokyo-fg">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-tokyo-fg text-sm truncate">
                           {tag.label}
                         </div>
-                        <div className="text-sm text-tokyo-fg-dark">
+                        <div className="text-xs text-tokyo-fg-dark truncate">
                           {tag.subHeading}
                         </div>
                       </div>
@@ -177,26 +192,32 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
       <ModalFooter>
         <div className="flex flex-wrap gap-3">
           {project.liveUrl && (
-            <Button
-              onClick={() => window.open(project.liveUrl, '_blank')}
-              className="bg-tokyo-blue hover:bg-tokyo-blue/80"
-            >
-              <ExternalLink size={18} className="mr-2" />
-              Live Demo
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => window.open(project.liveUrl, '_blank')}
+                className="bg-tokyo-blue hover:bg-tokyo-blue/80 shadow-lg shadow-tokyo-blue/20 transition-all duration-300"
+              >
+                <ExternalLink size={16} className="mr-2" />
+                Live Demo
+              </Button>
+            </motion.div>
           )}
           {project.githubUrl && (
-            <Button
-              variant="outline"
-              onClick={() => window.open(project.githubUrl, '_blank')}
+            <motion.div 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
             >
-              <Github size={18} className="mr-2" />
-              View Code
-            </Button>
+              <Button
+                variant="outline"
+                onClick={() => window.open(project.githubUrl, '_blank')}
+                className="border-tokyo-purple/50 hover:border-tokyo-purple hover:bg-tokyo-purple/10 transition-all duration-300"
+              >
+                <Github size={16} className="mr-2" />
+                View Code
+              </Button>
+            </motion.div>
           )}
-          <Button variant="ghost" onClick={onClose}>
-            Close
-          </Button>
         </div>
       </ModalFooter>
     </Modal>
@@ -227,9 +248,9 @@ export const Projects: React.FC = () => {
 
   if (loading) {
     return (
-      <section id="projects" className="py-20 bg-tokyo-bg">
+      <section id="projects" className="py-12 bg-tokyo-bg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-8">
             <div className="animate-spin h-12 w-12 border-4 border-tokyo-purple border-t-transparent rounded-full" />
           </div>
         </div>
@@ -238,7 +259,7 @@ export const Projects: React.FC = () => {
   }
 
   return (
-    <section id="projects" className="py-20 bg-tokyo-bg">
+    <section id="projects" className="py-12 bg-tokyo-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <div className="text-center mb-16">

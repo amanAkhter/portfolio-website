@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 import { authService } from '../../core/usecases'
 import { Button } from '../components/ui'
-import { Home, Briefcase, FolderGit2, Award, GraduationCap, MessageSquare, Settings, LogOut, Mail, Info } from 'lucide-react'
+import { Home, Briefcase, FolderGit2, Award, GraduationCap, MessageSquare, Settings, LogOut, Mail, Info, Menu, X } from 'lucide-react'
 import {
   HomeManager,
   AboutManager,
@@ -18,6 +18,7 @@ import {
 const AdminPage: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleSignOut = async () => {
     try {
@@ -48,14 +49,42 @@ const AdminPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-tokyo-bg flex">
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-tokyo-bg-dark border-b border-tokyo-black px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-tokyo-blue">Admin Panel</h1>
+          <p className="text-tokyo-fg-dark text-xs">Portfolio Management</p>
+        </div>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 text-tokyo-fg hover:text-tokyo-blue transition-colors"
+          aria-label="Toggle menu"
+        >
+          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-tokyo-bg-dark border-r border-tokyo-black flex flex-col fixed h-screen overflow-y-auto">
-        <div className="p-6 border-b border-tokyo-black">
+      <aside className={`
+        w-64 bg-tokyo-bg-dark border-r border-tokyo-black flex flex-col
+        fixed lg:sticky lg:top-0 z-40 h-screen overflow-y-auto
+        transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <div className="p-6 border-b border-tokyo-black hidden lg:block">
           <h1 className="text-2xl font-bold text-tokyo-blue">Admin Panel</h1>
           <p className="text-tokyo-fg-dark text-sm mt-1">Portfolio Management</p>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 mt-16 lg:mt-0">
           {menuItems.map((item) => {
             const Icon = item.icon
             const active = isActive(item.path)
@@ -63,13 +92,14 @@ const AdminPage: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setSidebarOpen(false)}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
                   active
                     ? 'bg-tokyo-bg-highlight text-tokyo-blue border-l-2 border-tokyo-blue'
                     : 'text-tokyo-fg-dark hover:bg-tokyo-bg-highlight hover:text-tokyo-blue'
                 }`}
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-5 h-5 flex-shrink-0" />
                 <span className="font-medium">{item.label}</span>
               </Link>
             )
@@ -82,14 +112,14 @@ const AdminPage: React.FC = () => {
             className="w-full justify-start text-tokyo-red hover:text-tokyo-red"
             onClick={handleSignOut}
           >
-            <LogOut className="w-5 h-5 mr-3" />
+            <LogOut className="w-5 h-5 mr-3 flex-shrink-0" />
             Sign Out
           </Button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pt-20 lg:pt-8">
         <Routes>
           <Route path="/" element={<AdminDashboard />} />
           <Route path="/home" element={<HomeManager />} />
@@ -110,74 +140,74 @@ const AdminPage: React.FC = () => {
 const AdminDashboard: React.FC = () => {
   return (
     <div>
-      <h2 className="text-3xl font-bold text-tokyo-fg mb-2">Dashboard</h2>
-      <p className="text-tokyo-fg-dark mb-6">Manage your portfolio content from here</p>
+      <h2 className="text-2xl sm:text-3xl font-bold text-tokyo-fg mb-2">Dashboard</h2>
+      <p className="text-tokyo-fg-dark mb-4 sm:mb-6 text-sm sm:text-base">Manage your portfolio content from here</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-blue transition-colors">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-blue transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-blue/20 flex items-center justify-center">
-              <Home className="w-5 h-5 text-tokyo-blue" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-blue/20 flex items-center justify-center">
+              <Home className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-blue" />
             </div>
-            <h3 className="text-tokyo-blue font-semibold text-lg">Home & About</h3>
+            <h3 className="text-tokyo-blue font-semibold text-base sm:text-lg">Home & About</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Manage home section and about information</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Manage home section and about information</p>
         </div>
 
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-purple transition-colors">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-purple transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-purple/20 flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-tokyo-purple" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-purple/20 flex items-center justify-center">
+              <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-purple" />
             </div>
-            <h3 className="text-tokyo-purple font-semibold text-lg">Experience & Projects</h3>
+            <h3 className="text-tokyo-purple font-semibold text-base sm:text-lg">Experience & Projects</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Add and manage your work experience and projects</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Add and manage your work experience and projects</p>
         </div>
 
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-cyan transition-colors">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-cyan transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-cyan/20 flex items-center justify-center">
-              <Award className="w-5 h-5 text-tokyo-cyan" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-cyan/20 flex items-center justify-center">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-cyan" />
             </div>
-            <h3 className="text-tokyo-cyan font-semibold text-lg">Skills & Certifications</h3>
+            <h3 className="text-tokyo-cyan font-semibold text-base sm:text-lg">Skills & Certifications</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Showcase your skills and certifications</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Showcase your skills and certifications</p>
         </div>
 
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-green transition-colors">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-green transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-green/20 flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-tokyo-green" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-green/20 flex items-center justify-center">
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-green" />
             </div>
-            <h3 className="text-tokyo-green font-semibold text-lg">Education</h3>
+            <h3 className="text-tokyo-green font-semibold text-base sm:text-lg">Education</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Add your educational background</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Add your educational background</p>
         </div>
 
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-yellow transition-colors">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-yellow transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-yellow/20 flex items-center justify-center">
-              <Mail className="w-5 h-5 text-tokyo-yellow" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-yellow/20 flex items-center justify-center">
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-yellow" />
             </div>
-            <h3 className="text-tokyo-yellow font-semibold text-lg">Contact</h3>
+            <h3 className="text-tokyo-yellow font-semibold text-base sm:text-lg">Contact</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Manage contact information and view submissions</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Manage contact information and view submissions</p>
         </div>
 
-        <div className="p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-red transition-colors">
+        <div className="p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg hover:border-tokyo-red transition-colors">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-tokyo-red/20 flex items-center justify-center">
-              <Settings className="w-5 h-5 text-tokyo-red" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-tokyo-red/20 flex items-center justify-center">
+              <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-tokyo-red" />
             </div>
-            <h3 className="text-tokyo-red font-semibold text-lg">Quick Actions</h3>
+            <h3 className="text-tokyo-red font-semibold text-base sm:text-lg">Quick Actions</h3>
           </div>
-          <p className="text-tokyo-fg-dark text-sm">Use the sidebar to navigate between sections</p>
+          <p className="text-tokyo-fg-dark text-xs sm:text-sm">Use the sidebar to navigate between sections</p>
         </div>
       </div>
 
-      <div className="mt-8 p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg">
-        <h3 className="text-tokyo-fg font-semibold text-lg mb-3">Getting Started</h3>
-        <ul className="space-y-2 text-tokyo-fg-dark text-sm">
+      <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-tokyo-bg-light border border-tokyo-black rounded-lg">
+        <h3 className="text-tokyo-fg font-semibold text-base sm:text-lg mb-3">Getting Started</h3>
+        <ul className="space-y-2 text-tokyo-fg-dark text-xs sm:text-sm">
           <li className="flex items-start gap-2">
             <span className="text-tokyo-blue mt-1">•</span>
             <span>Start by updating your <strong>Home</strong> and <strong>About</strong> sections with your basic information</span>

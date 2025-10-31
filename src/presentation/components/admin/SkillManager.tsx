@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter, EmptyState } from '../ui';
-import { Plus, Edit, Trash2, Save, FolderPlus } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, FolderPlus, RefreshCw } from 'lucide-react';
 import type { Skill, SkillSection } from '../../../shared/types';
 
 export const SkillManager: React.FC = () => {
@@ -121,6 +121,30 @@ export const SkillManager: React.FC = () => {
     }
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to delete ALL skill sections and skills? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setLoading(true);
+      for (const section of sections) {
+        if (section.id) {
+          await portfolioService.deleteSkillSection(section.id);
+        }
+      }
+      alert('All skill sections have been deleted successfully!');
+      loadData();
+    } catch (error) {
+      console.error('Error clearing skills:', error);
+      alert('Failed to clear all skills');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   const hasNoData = skills.length === 0 && sections.length === 0;
@@ -130,6 +154,16 @@ export const SkillManager: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-tokyo-fg">Skills Management</h2>
         <div className="flex gap-2">
+          {sections.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleClearAll}
+              className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Clear All
+            </Button>
+          )}
           <Button onClick={openCreateSectionModal} variant="outline">
             <FolderPlus className="w-4 h-4 mr-2" />
             Add Section

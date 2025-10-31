@@ -44,20 +44,31 @@ const SkillCategory: React.FC<SkillCategoryProps> = ({ section, skills }) => {
               <div className="space-y-4">
                 {skills.map((skill, index) => (
                   <ScrollReveal key={skill.id || index} delay={index * 0.05}>
-                    <div className="space-y-2">
+                    <motion.div 
+                      className="space-y-2 group"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <div className="flex justify-between items-center">
-                        <span className="text-tokyo-fg font-medium">
+                        <span className="text-tokyo-fg font-medium group-hover:text-tokyo-blue transition-colors duration-300">
                           {skill.name}
                         </span>
-                        <span className="text-tokyo-blue font-semibold">
+                        <motion.span 
+                          className="text-tokyo-blue font-semibold"
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.5 + index * 0.05, duration: 0.5 }}
+                        >
                           {skill.percentage}%
-                        </span>
+                        </motion.span>
                       </div>
                       <Progress
                         value={skill.percentage}
                         className="h-2"
+                        animated={true}
                       />
-                    </div>
+                    </motion.div>
                   </ScrollReveal>
                 ))}
               </div>
@@ -100,9 +111,9 @@ export const Skills: React.FC = () => {
 
   if (loading) {
     return (
-      <section id="skills" className="py-20 bg-tokyo-bg-light">
+      <section id="skills" className="py-12 bg-tokyo-bg-light">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-8">
             <div className="animate-spin h-12 w-12 border-4 border-tokyo-cyan border-t-transparent rounded-full" />
           </div>
         </div>
@@ -111,7 +122,7 @@ export const Skills: React.FC = () => {
   }
 
   return (
-    <section id="skills" className="py-20 bg-tokyo-bg-light">
+    <section id="skills" className="py-12 bg-tokyo-bg-light">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <div className="text-center mb-16">

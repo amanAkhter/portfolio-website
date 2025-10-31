@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, EmptyState } from '../ui';
-import { Save, Plus, Trash2 } from 'lucide-react';
+import { Save, Plus, Trash2, RefreshCw } from 'lucide-react';
 import type { ContactInfo, SocialLink } from '../../../shared/types';
 
 export const ContactManager: React.FC = () => {
@@ -71,6 +71,34 @@ export const ContactManager: React.FC = () => {
     setFormData({ ...formData, socialLinks: updatedLinks });
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to clear all Contact information? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setSaving(true);
+      const emptyData: ContactInfo = {
+        email: '',
+        phone: '',
+        location: '',
+        socialLinks: [],
+      };
+      
+      await portfolioService.updateContactInfo(emptyData);
+      setFormData(emptyData);
+      setHasData(false);
+      alert('All Contact information has been cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing contact info:', error);
+      alert('Failed to clear contact info');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   if (!hasData) {
@@ -88,7 +116,19 @@ export const ContactManager: React.FC = () => {
 
   return (
     <div className="max-w-4xl">
-      <h2 className="text-3xl font-bold text-tokyo-fg mb-6">Contact Information</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-tokyo-fg">Contact Information</h2>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleClearAll}
+          disabled={saving}
+          className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Clear All Data
+        </Button>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card className="p-6">

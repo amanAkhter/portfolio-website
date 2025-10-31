@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter, EmptyState } from '../ui';
-import { Plus, Edit, Trash2, Save, X, GraduationCap } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, GraduationCap, RefreshCw } from 'lucide-react';
 import type { Education } from '../../../shared/types';
 
 export const EducationManager: React.FC = () => {
@@ -98,16 +98,52 @@ export const EducationManager: React.FC = () => {
     setFormData({ ...formData, [field]: items });
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to delete ALL education records? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setLoading(true);
+      for (const edu of educations) {
+        if (edu.id) {
+          await portfolioService.deleteEducation(edu.id);
+        }
+      }
+      alert('All education records have been deleted successfully!');
+      loadData();
+    } catch (error) {
+      console.error('Error clearing education:', error);
+      alert('Failed to clear all education records');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
     <div className="max-w-6xl">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-tokyo-fg">Education Management</h2>
-        <Button onClick={openCreateModal}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Education
-        </Button>
+        <div className="flex gap-3">
+          {educations.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleClearAll}
+              className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Clear All
+            </Button>
+          )}
+          <Button onClick={openCreateModal}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Education
+          </Button>
+        </div>
       </div>
 
       {educations.length === 0 ? (

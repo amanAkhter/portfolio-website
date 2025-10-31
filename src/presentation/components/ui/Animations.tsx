@@ -112,9 +112,9 @@ export const ScaleOnHover: React.FC<ScaleOnHoverProps> = ({
 }) => {
   return (
     <motion.div
-      whileHover={{ scale }}
+      whileHover={{ scale, y: -5 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={className}
     >
       {children}

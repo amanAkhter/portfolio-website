@@ -375,15 +375,16 @@ export class FirebaseSkillRepository implements ISkillRepository {
       if (!dbInstance) return [];
       const q = query(
         collection(dbInstance, this.collectionName),
-        where('section', '==', section),
-        orderBy('order', 'asc')
+        where('section', '==', section)
       );
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(docData => {
+      const skills = querySnapshot.docs.map(docData => {
         const raw = docData.data();
         const converted = convertTimestamp(raw);
         return { id: docData.id, ...(typeof converted === 'object' ? converted : {}) } as Skill;
       });
+      // Sort by order in memory instead of using Firebase orderBy
+      return skills.sort((a, b) => (a.order || 0) - (b.order || 0));
     } catch (error) {
       console.error('Error fetching skills by section:', error);
       return [];

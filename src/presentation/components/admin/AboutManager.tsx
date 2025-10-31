@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, EmptyState } from '../ui';
-import { Save, Plus, Trash2 } from 'lucide-react';
+import { Save, Plus, Trash2, RefreshCw } from 'lucide-react';
 import type { AboutData } from '../../../shared/types';
 
 export const AboutManager: React.FC = () => {
@@ -70,6 +70,33 @@ export const AboutManager: React.FC = () => {
     setFormData({ ...formData, latestPositions: updated });
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to clear all About section data? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setSaving(true);
+      const emptyData: AboutData = {
+        intro: '',
+        overview: '',
+        latestPositions: [],
+      };
+      
+      await portfolioService.updateAboutData(emptyData);
+      setFormData(emptyData);
+      setHasData(false);
+      alert('All About section data has been cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing about data:', error);
+      alert('Failed to clear about data');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   if (!hasData) {
@@ -87,7 +114,19 @@ export const AboutManager: React.FC = () => {
 
   return (
     <div className="max-w-4xl">
-      <h2 className="text-3xl font-bold text-tokyo-fg mb-6">About Section</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-tokyo-fg">About Section</h2>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleClearAll}
+          disabled={saving}
+          className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Clear All Data
+        </Button>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card className="p-6">

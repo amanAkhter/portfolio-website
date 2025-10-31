@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { gsap } from 'gsap'
-import { Download, Mail, Github, Linkedin, Twitter, Instagram, Code, Trophy, Award } from 'lucide-react'
-import { Button } from '../ui'
+import { Download, Mail, Github, Linkedin, Twitter, Instagram, Code, Trophy, Award, BookOpen, FileText, Code2, Youtube, MessageSquare } from 'lucide-react'
+import { Button, TypingTagline, ParticlesBackground } from '../ui'
 import { FadeIn, SlideIn, GlowOnHover } from '../ui/Animations'
 import type { HomeData } from '../../../shared/types'
 
@@ -18,11 +18,30 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Code,
   Trophy,
   Award,
+  BookOpen,
+  FileText,
+  Code2,
+  Youtube,
+  MessageSquare,
 }
 
 export const Home: React.FC<HomeProps> = ({ data }) => {
   const heroRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
+
+  // Convert Google Drive URL to direct image URL
+  const getDirectImageUrl = (url: string): string => {
+    if (!url) return url
+    
+    // Check if it's a Google Drive URL
+    const driveMatch = url.match(/\/file\/d\/([^/]+)/)
+    if (driveMatch && driveMatch[1]) {
+      // Convert to direct image URL
+      return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`
+    }
+    
+    return url
+  }
 
   useEffect(() => {
     if (heroRef.current && imageRef.current) {
@@ -50,13 +69,19 @@ export const Home: React.FC<HomeProps> = ({ data }) => {
       ref={heroRef}
       className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-tokyo-bg via-tokyo-bg-dark to-tokyo-bg"
     >
+      {/* Particles.js Background */}
+      <ParticlesBackground id="home-particles" />
+      
+      {/* Mouse Particle Effect */}
+      {/* <MouseParticleEffect /> */}
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-96 h-96 bg-tokyo-blue/10 rounded-full blur-3xl -top-48 -left-48 animate-pulse" />
         <div className="absolute w-96 h-96 bg-tokyo-purple/10 rounded-full blur-3xl -bottom-48 -right-48 animate-pulse" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-6">
@@ -73,9 +98,19 @@ export const Home: React.FC<HomeProps> = ({ data }) => {
             </FadeIn>
 
             <SlideIn direction="left" delay={0.3}>
-              <h2 className="text-3xl sm:text-4xl font-semibold bg-gradient-to-r from-tokyo-blue via-tokyo-purple to-tokyo-cyan bg-clip-text text-transparent">
-                {data.tagline || 'Full Stack Developer'}
-              </h2>
+              {data.taglines && data.taglines.length > 0 ? (
+                <TypingTagline 
+                  taglines={data.taglines}
+                  className="text-3xl sm:text-4xl font-semibold"
+                  typingSpeed={80}
+                  deletingSpeed={40}
+                  pauseDuration={2000}
+                />
+              ) : (
+                <h2 className="text-3xl sm:text-4xl font-semibold bg-gradient-to-r from-tokyo-blue via-tokyo-purple to-tokyo-cyan bg-clip-text text-transparent">
+                  {data.tagline || 'Full Stack Developer'}
+                </h2>
+              )}
             </SlideIn>
 
             <FadeIn delay={0.4}>
@@ -114,21 +149,34 @@ export const Home: React.FC<HomeProps> = ({ data }) => {
             {/* Social Links */}
             <FadeIn delay={0.6}>
               <div className="flex flex-wrap gap-4 pt-6">
-                {data.socialLinks.map((social, index) => {
+                {data.socialLinks.map((social) => {
                   const Icon = iconMap[social.icon || 'Code'] || Code
                   return (
-                    <GlowOnHover key={index}>
-                      <motion.a
+                    <motion.div
+                      key={social.url}
+                      whileHover={{ scale: 1.15, rotate: 360 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ duration: 0.6 }}
+                      className="relative"
+                    >
+                      <a
                         href={social.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 rounded-full border border-tokyo-blue/30 hover:border-tokyo-blue hover:bg-tokyo-blue/10 transition-all duration-300"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        whileTap={{ scale: 0.95 }}
+                        className="w-12 h-12 flex items-center justify-center rounded-full border-2 border-tokyo-blue/30 hover:border-tokyo-blue bg-tokyo-bg-dark/60 hover:bg-tokyo-blue/10 transition-all duration-300 backdrop-blur-sm relative"
+                        style={{
+                          boxShadow: '0 4px 14px 0 rgba(122, 162, 247, 0.15)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = '0 6px 20px 0 rgba(122, 162, 247, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = '0 4px 14px 0 rgba(122, 162, 247, 0.15)';
+                        }}
                       >
-                        <Icon className="h-5 w-5 text-tokyo-blue" />
-                      </motion.a>
-                    </GlowOnHover>
+                        <Icon className="h-6 w-6 text-tokyo-blue" />
+                      </a>
+                    </motion.div>
                   )
                 })}
               </div>
@@ -146,7 +194,7 @@ export const Home: React.FC<HomeProps> = ({ data }) => {
                 <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full overflow-hidden border-4 border-tokyo-blue/30 shadow-2xl">
                   <img
                     ref={imageRef}
-                    src={data.profileURL}
+                    src={getDirectImageUrl(data.profileURL)}
                     alt={data.name || 'Profile'}
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -171,7 +219,7 @@ export const Home: React.FC<HomeProps> = ({ data }) => {
 
       {/* Scroll Indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="hidden lg:block absolute bottom-8 left-1/2 transform -translate-x-1/2"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >

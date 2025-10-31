@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 import { portfolioService } from '../../../core/usecases'
 import { ScrollReveal, FadeIn, SlideIn } from '../ui/Animations'
 import { Card, CardContent } from '../ui/Card'
@@ -48,9 +49,9 @@ export const Experience: React.FC = () => {
 
   if (loading) {
     return (
-      <section id="experience" className="py-20 bg-tokyo-bg-light">
+      <section id="experience" className="py-12 bg-tokyo-bg-light">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-8">
             <div className="animate-spin h-12 w-12 border-4 border-tokyo-blue border-t-transparent rounded-full" />
           </div>
         </div>
@@ -59,7 +60,7 @@ export const Experience: React.FC = () => {
   }
 
   return (
-    <section id="experience" className="py-20 bg-tokyo-bg-light">
+    <section id="experience" className="py-12 bg-tokyo-bg-light">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <div className="text-center mb-16">
@@ -75,7 +76,11 @@ export const Experience: React.FC = () => {
         <div className="max-w-5xl mx-auto space-y-8">
           {displayedExperiences.map((exp, index) => (
             <ScrollReveal key={exp.id || index} delay={index * 0.1}>
-              <Card className="hover:border-tokyo-blue transition-all duration-300 hover:shadow-lg hover:shadow-tokyo-blue/20">
+              <motion.div
+                whileHover={{ scale: 1.01, y: -5 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              >
+                <Card className="hover:border-tokyo-blue transition-all duration-300 hover:shadow-2xl hover:shadow-tokyo-blue/20">
                 <CardContent className="p-6 md:p-8">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex-1">
@@ -152,6 +157,7 @@ export const Experience: React.FC = () => {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
             </ScrollReveal>
           ))}
         </div>
@@ -159,13 +165,15 @@ export const Experience: React.FC = () => {
         {hasMore && (
           <SlideIn direction="up" delay={0.2}>
             <div className="flex justify-center mt-12">
-              <Button
-                onClick={() => setDisplayCount((prev) => prev + ITEMS_PER_PAGE)}
-                variant="outline"
-                className="hover:bg-tokyo-blue hover:text-white transition-all duration-300"
-              >
-                Load More Experiences
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={() => setDisplayCount((prev) => prev + ITEMS_PER_PAGE)}
+                  variant="outline"
+                  className="hover:bg-tokyo-blue hover:text-white transition-all duration-300"
+                >
+                  Load More Experiences
+                </Button>
+              </motion.div>
             </div>
           </SlideIn>
         )}

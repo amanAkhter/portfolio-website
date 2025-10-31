@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter, EmptyState } from '../ui';
-import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, RefreshCw } from 'lucide-react';
 import type { Experience } from '../../../shared/types';
 
 export const ExperienceManager: React.FC = () => {
@@ -99,16 +99,53 @@ export const ExperienceManager: React.FC = () => {
     setFormData({ ...formData, [field]: items });
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to delete ALL experiences? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setLoading(true);
+      // Delete all experiences
+      for (const exp of experiences) {
+        if (exp.id) {
+          await portfolioService.deleteExperience(exp.id);
+        }
+      }
+      alert('All experiences have been deleted successfully!');
+      loadData();
+    } catch (error) {
+      console.error('Error clearing experiences:', error);
+      alert('Failed to clear all experiences');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
     <div className="max-w-6xl">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-tokyo-fg">Experience Management</h2>
-        <Button onClick={openCreateModal}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Experience
-        </Button>
+        <div className="flex gap-3">
+          {experiences.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleClearAll}
+              className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Clear All
+            </Button>
+          )}
+          <Button onClick={openCreateModal}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Experience
+          </Button>
+        </div>
       </div>
 
       {experiences.length === 0 ? (

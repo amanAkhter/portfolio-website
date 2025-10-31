@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter, EmptyState } from '../ui';
-import { Plus, Edit, Trash2, Save, X, Award } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Award, RefreshCw } from 'lucide-react';
 import type { Certification } from '../../../shared/types';
 
 export const CertificationManager: React.FC = () => {
@@ -97,16 +97,52 @@ export const CertificationManager: React.FC = () => {
     setFormData({ ...formData, skills });
   };
 
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to delete ALL certifications? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setLoading(true);
+      for (const cert of certifications) {
+        if (cert.id) {
+          await portfolioService.deleteCertification(cert.id);
+        }
+      }
+      alert('All certifications have been deleted successfully!');
+      loadData();
+    } catch (error) {
+      console.error('Error clearing certifications:', error);
+      alert('Failed to clear all certifications');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
     <div className="max-w-6xl">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-tokyo-fg">Certifications Management</h2>
-        <Button onClick={openCreateModal}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Certification
-        </Button>
+        <div className="flex gap-3">
+          {certifications.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleClearAll}
+              className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Clear All
+            </Button>
+          )}
+          <Button onClick={openCreateModal}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Certification
+          </Button>
+        </div>
       </div>
 
       {certifications.length === 0 ? (

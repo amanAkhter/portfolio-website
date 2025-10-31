@@ -39,9 +39,9 @@ export const Modal: React.FC<ModalProps> = ({
   const sizeClasses = {
     sm: 'max-w-md',
     md: 'max-w-2xl',
-    lg: 'max-w-4xl',
-    xl: 'max-w-6xl',
-    full: 'max-w-[95vw]',
+    lg: 'max-w-3xl',
+    xl: 'max-w-5xl',
+    full: 'max-w-[90vw]',
   }
 
   return (
@@ -51,7 +51,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         className={cn(
-          "relative w-full bg-tokyo-bg-light border border-tokyo-black rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto animate-scale-in",
+          "relative w-full bg-tokyo-bg-light border border-tokyo-black rounded-lg shadow-2xl max-h-[85vh] overflow-hidden flex flex-col animate-scale-in",
           sizeClasses[size],
           className
         )}
@@ -60,10 +60,11 @@ export const Modal: React.FC<ModalProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 right-4 text-tokyo-fg hover:text-tokyo-red z-10"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 text-tokyo-fg hover:text-tokyo-red z-10 transition-all duration-300 hover:rotate-90 bg-tokyo-bg-dark/80 hover:bg-tokyo-bg-dark"
           onClick={onClose}
+          aria-label="Close modal"
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5 sm:h-6 sm:w-6" />
         </Button>
         {children}
       </div>
@@ -102,7 +103,7 @@ export const ModalBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   ...props
 }) => (
-  <div className={cn("p-6", className)} {...props}>
+  <div className={cn("p-6 overflow-y-auto flex-1", className)} {...props}>
     {children}
   </div>
 )

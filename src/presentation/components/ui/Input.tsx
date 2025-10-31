@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cn } from "../../../shared/utils/helpers"
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
@@ -9,7 +9,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "flex h-10 w-full rounded-md border border-tokyo-black bg-tokyo-bg-dark px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-tokyo-comment focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tokyo-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-10 w-full rounded-md border border-tokyo-black bg-tokyo-bg-dark px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-tokyo-comment focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tokyo-blue focus-visible:ring-offset-2 focus-visible:border-tokyo-blue disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300",
           className
         )}
         ref={ref}

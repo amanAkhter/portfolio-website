@@ -145,9 +145,9 @@ export const Education: React.FC = () => {
 
   if (loading) {
     return (
-      <section id="education" className="py-20 bg-tokyo-bg-light">
+      <section id="education" className="py-12 bg-tokyo-bg-light">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-8">
             <div className="animate-spin h-12 w-12 border-4 border-tokyo-green border-t-transparent rounded-full" />
           </div>
         </div>
@@ -156,7 +156,7 @@ export const Education: React.FC = () => {
   }
 
   return (
-    <section id="education" className="py-20 bg-tokyo-bg-light">
+    <section id="education" className="py-12 bg-tokyo-bg-light">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <div className="text-center mb-16">

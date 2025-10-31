@@ -33,6 +33,15 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: default;
+  }
+
+  * {
+    cursor: inherit;
+  }
+
+  a, button, [role="button"], .cursor-pointer {
+    cursor: pointer !important;
   }
 
   html {
@@ -47,5 +56,158 @@
   
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  /* Rainbow animation for easter eggs */
+  @keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  /* Gradient text animation */
+  .gradient-text {
+    background: linear-gradient(90deg, #7aa2f7, #bb9af7, #7dcfff, #9ece6a, #e0af68, #f7768e);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background-size: 200% 100%;
+    animation: textShimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes textShimmer {
+    0%, 100% { background-position: 200% 0; }
+    50% { background-position: -200% 0; }
+  }
+
+  /* Floating animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  /* Glow pulse */
+  .glow-pulse {
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(122, 162, 247, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(122, 162, 247, 0.8); }
+  }
+
+  /* Fade in animation */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Scale in animation */
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Slide up animation */
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Slide in from right animation for mobile menu items */
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Neon glow */
+  .neon-blue {
+    text-shadow: 0 0 10px #7aa2f7, 0 0 20px #7aa2f7, 0 0 30px #7aa2f7;
+  }
+
+  .neon-purple {
+    text-shadow: 0 0 10px #bb9af7, 0 0 20px #bb9af7, 0 0 30px #bb9af7;
+  }
+
+  .neon-cyan {
+    text-shadow: 0 0 10px #7dcfff, 0 0 20px #7dcfff, 0 0 30px #7dcfff;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #16161e;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #7aa2f7;
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #bb9af7;
+  }
+
+  /* Selection color */
+  ::selection {
+    background: #7aa2f7;
+    color: #1a1b26;
+  }
+
+  ::-moz-selection {
+    background: #7aa2f7;
+    color: #1a1b26;
   }
 }

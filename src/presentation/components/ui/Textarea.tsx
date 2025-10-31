@@ -1,14 +1,14 @@
 import * as React from "react"
 import { cn } from "../../../shared/utils/helpers"
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
     return (
       <textarea
         className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-tokyo-black bg-tokyo-bg-dark px-3 py-2 text-sm ring-offset-background placeholder:text-tokyo-comment focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tokyo-blue focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex min-h-[80px] w-full rounded-md border border-tokyo-black bg-tokyo-bg-dark px-3 py-2 text-sm ring-offset-background placeholder:text-tokyo-comment focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tokyo-blue focus-visible:ring-offset-2 focus-visible:border-tokyo-blue disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300",
           className
         )}
         ref={ref}

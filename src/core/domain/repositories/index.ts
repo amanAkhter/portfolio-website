@@ -52,9 +52,10 @@ export interface ISkillRepository extends BaseRepository<Skill> {
 }
 
 // Skill Section Repository
-export interface ISkillSectionRepository extends BaseRepository<SkillSection> {
-  // Extends base repository
-}
+export type ISkillSectionRepository = BaseRepository<SkillSection>;
+// export interface ISkillSectionRepository extends BaseRepository<SkillSection> {
+//   // Extends base repository
+// }
 
 // Certification Repository
 export interface ICertificationRepository extends BaseRepository<Certification> {
@@ -62,9 +63,10 @@ export interface ICertificationRepository extends BaseRepository<Certification> 
 }
 
 // Education Repository
-export interface IEducationRepository extends BaseRepository<Education> {
-  // Extends base repository
-}
+export type IEducationRepository = BaseRepository<Education>;
+// export interface IEducationRepository extends BaseRepository<Education> {
+//   // Extends base repository
+// }
 
 // Contact Repository
 export interface IContactRepository {
@@ -87,6 +89,7 @@ export interface IUserRepository {
 // Auth Repository
 export interface IAuthRepository {
   signIn(email: string, password: string): Promise<User>;
+  signInWithGoogle(): Promise<User>;
   signOut(): Promise<void>;
   getCurrentUser(): Promise<User | null>;
   onAuthStateChanged(callback: (user: User | null) => void): () => void;

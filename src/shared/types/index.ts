@@ -15,6 +15,7 @@ export interface HomeData {
   greeting?: string;
   name?: string;
   tagline?: string;
+  taglines?: string[]; // Multiple taglines for typing animation
   description?: string;
 }
 

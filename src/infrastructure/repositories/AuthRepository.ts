@@ -1,5 +1,7 @@
 import {
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged as firebaseOnAuthStateChanged,
   type User as FirebaseUser,
@@ -43,6 +45,26 @@ export class FirebaseAuthRepository implements IAuthRepository {
       return user;
     } catch (error) {
       console.error('Error signing in:', error);
+      throw error;
+    }
+  }
+
+  async signInWithGoogle(): Promise<User> {
+    try {
+      const authInstance = this.checkFirebaseAuth();
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(authInstance, provider);
+      const user = this.mapFirebaseUser(userCredential.user);
+      
+      // Fetch user role from Firestore
+      const userData = await this.userRepository.getById(user.uid);
+      if (userData) {
+        return { ...user, role: userData.role };
+      }
+      
+      return user;
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
       throw error;
     }
   }

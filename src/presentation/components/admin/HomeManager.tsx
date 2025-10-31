@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portfolioService } from '../../../core/usecases';
 import { Button, FormInput as Input, Card, LoadingScreen as Loading, EmptyState } from '../ui';
-import { Save, Plus, Trash2 } from 'lucide-react';
+import { Save, Plus, Trash2, RefreshCw } from 'lucide-react';
 import type { HomeData, SocialLink } from '../../../shared/types';
 
 export const HomeManager: React.FC = () => {
@@ -16,6 +16,7 @@ export const HomeManager: React.FC = () => {
     greeting: '',
     name: '',
     tagline: '',
+    taglines: [],
     description: '',
   });
 
@@ -75,6 +76,60 @@ export const HomeManager: React.FC = () => {
     setFormData({ ...formData, socialLinks: updatedLinks });
   };
 
+  const addTagline = () => {
+    setFormData({
+      ...formData,
+      taglines: [...(formData.taglines || []), ''],
+    });
+  };
+
+  const removeTagline = (index: number) => {
+    setFormData({
+      ...formData,
+      taglines: (formData.taglines || []).filter((_, i) => i !== index),
+    });
+  };
+
+  const updateTagline = (index: number, value: string) => {
+    const updatedTaglines = [...(formData.taglines || [])];
+    updatedTaglines[index] = value;
+    setFormData({ ...formData, taglines: updatedTaglines });
+  };
+
+  const handleClearAll = async () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to clear all Home section data? This action cannot be undone.'
+    );
+    
+    if (!confirmClear) return;
+
+    try {
+      setSaving(true);
+      // Reset to empty state
+      const emptyData: HomeData = {
+        profileURL: '',
+        resumeURL: '',
+        email: '',
+        socialLinks: [],
+        greeting: '',
+        name: '',
+        tagline: '',
+        taglines: [],
+        description: '',
+      };
+      
+      await portfolioService.updateHomeData(emptyData);
+      setFormData(emptyData);
+      setHasData(false);
+      alert('All Home section data has been cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing home data:', error);
+      alert('Failed to clear home data');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   if (!hasData) {
@@ -92,7 +147,19 @@ export const HomeManager: React.FC = () => {
 
   return (
     <div className="max-w-4xl">
-      <h2 className="text-3xl font-bold text-tokyo-fg mb-6">Home Section</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-tokyo-fg">Home Section</h2>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleClearAll}
+          disabled={saving}
+          className="text-tokyo-red hover:text-tokyo-red border-tokyo-red/30 hover:border-tokyo-red"
+        >
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Clear All Data
+        </Button>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card className="p-6">
@@ -139,11 +206,55 @@ export const HomeManager: React.FC = () => {
             />
 
             <Input
-              label="Tagline"
+              label="Tagline (Single - Fallback)"
               placeholder="Full Stack Developer"
               value={formData.tagline || ''}
               onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
             />
+
+            <div className="border-t border-tokyo-black pt-4">
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <label className="block text-sm font-medium text-tokyo-fg mb-1">
+                    Animated Taglines (Multiple)
+                  </label>
+                  <p className="text-xs text-tokyo-comment">
+                    Add multiple taglines for typing/backspace animation effect. Leave empty to use single tagline above.
+                  </p>
+                </div>
+                <Button type="button" onClick={addTagline} size="sm" variant="outline">
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Tagline
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {(formData.taglines || []).map((tagline, index) => (
+                  <div key={index} className="flex gap-3 items-center">
+                    <Input
+                      placeholder={`Tagline ${index + 1} (e.g., Full Stack Developer)`}
+                      value={tagline}
+                      onChange={(e) => updateTagline(index, e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => removeTagline(index)}
+                      className="text-tokyo-red hover:text-tokyo-red"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              {(formData.taglines || []).length === 0 && (
+                <div className="text-sm text-tokyo-comment italic py-3 text-center border border-dashed border-tokyo-black rounded-lg">
+                  No animated taglines added. Click "Add Tagline" to create typing animation effect.
+                </div>
+              )}
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-tokyo-fg mb-2">
