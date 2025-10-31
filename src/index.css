@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 225 100% 90%;
+    --card: 222 47% 14%;
+    --card-foreground: 225 100% 90%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 225 100% 90%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 222 41% 30%;
+    --muted-foreground: 225 9% 60%;
+    --accent: 187 100% 75%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 76%;
+    --destructive-foreground: 222 47% 11%;
+    --border: 222 41% 30%;
+    --input: 222 41% 30%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-tokyo-bg text-tokyo-fg;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+}
