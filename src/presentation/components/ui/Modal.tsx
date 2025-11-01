@@ -51,7 +51,7 @@ export const Modal: React.FC<ModalProps> = ({
     >
       <div
         className={cn(
-          "relative w-full bg-tokyo-bg-light border border-tokyo-black rounded-lg shadow-2xl max-h-[85vh] overflow-hidden flex flex-col animate-scale-in",
+          "relative w-full bg-tokyo-bg-light border border-tokyo-black rounded-lg shadow-2xl max-h-[80vh] overflow-hidden flex flex-col animate-scale-in",
           sizeClasses[size],
           className
         )}
@@ -78,7 +78,7 @@ export const ModalHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn("flex flex-col space-y-2 p-6 border-b border-tokyo-black", className)}
+    className={cn("flex flex-col space-y-1.5 p-4 sm:p-5 border-b border-tokyo-black", className)}
     {...props}
   >
     {children}
@@ -91,7 +91,7 @@ export const ModalTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
   ...props
 }) => (
   <h2
-    className={cn("text-2xl font-semibold text-tokyo-fg", className)}
+    className={cn("text-xl sm:text-2xl font-semibold text-tokyo-fg", className)}
     {...props}
   >
     {children}
@@ -103,7 +103,7 @@ export const ModalBody: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   ...props
 }) => (
-  <div className={cn("p-6 overflow-y-auto flex-1", className)} {...props}>
+  <div className={cn("p-4 sm:p-5 overflow-y-auto flex-1", className)} {...props}>
     {children}
   </div>
 )
@@ -114,7 +114,7 @@ export const ModalFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => (
   <div
-    className={cn("flex items-center justify-end gap-2 p-6 border-t border-tokyo-black", className)}
+    className={cn("flex items-center justify-end gap-2 p-4 sm:p-5 border-t border-tokyo-black", className)}
     {...props}
   >
     {children}

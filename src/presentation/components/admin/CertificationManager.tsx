@@ -99,23 +99,33 @@ export const CertificationManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to delete ALL certifications? This action cannot be undone.'
+      'Are you sure you want to delete ALL certifications? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setLoading(true);
+      
+      // Delete all certifications
       for (const cert of certifications) {
         if (cert.id) {
           await portfolioService.deleteCertification(cert.id);
         }
       }
-      alert('All certifications have been deleted successfully!');
-      loadData();
+      
+      // Clear the state immediately
+      setCertifications([]);
+      
+      alert('All certifications have been deleted successfully! The system will now use fallback configuration.');
+      
+      // Reload to verify and show empty state
+      await loadData();
     } catch (error) {
       console.error('Error clearing certifications:', error);
       alert('Failed to clear all certifications');
+      // Still reload to show current state
+      await loadData();
     } finally {
       setLoading(false);
     }

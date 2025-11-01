@@ -28,10 +28,25 @@ export const HomeManager: React.FC = () => {
     try {
       setLoading(true);
       const data = await portfolioService.getHomeDataAdmin();
-      if (data) {
-        setFormData(data);
+      
+      // Check if data exists and has meaningful content
+      const hasValidData = data && (
+        data.email || 
+        data.name || 
+        data.profileURL || 
+        data.resumeURL || 
+        data.greeting || 
+        data.tagline || 
+        data.description ||
+        (data.taglines && data.taglines.length > 0) ||
+        (data.socialLinks && data.socialLinks.length > 0)
+      );
+      
+      if (hasValidData) {
+        setFormData(data!);
         setHasData(true);
       } else {
+        // No valid data, show empty state to use fallback
         setHasData(false);
       }
     } catch (error) {
@@ -98,13 +113,14 @@ export const HomeManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to clear all Home section data? This action cannot be undone.'
+      'Are you sure you want to clear all Home section data? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setSaving(true);
+      
       // Reset to empty state
       const emptyData: HomeData = {
         profileURL: '',
@@ -119,12 +135,17 @@ export const HomeManager: React.FC = () => {
       };
       
       await portfolioService.updateHomeData(emptyData);
+      
+      // Clear the state immediately
       setFormData(emptyData);
       setHasData(false);
-      alert('All Home section data has been cleared successfully!');
+      
+      alert('All Home section data has been cleared successfully! The system will now use fallback configuration.');
     } catch (error) {
       console.error('Error clearing home data:', error);
       alert('Failed to clear home data');
+      // Reload to show current state
+      await loadData();
     } finally {
       setSaving(false);
     }

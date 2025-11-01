@@ -122,23 +122,33 @@ export const ProjectManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to delete ALL projects? This action cannot be undone.'
+      'Are you sure you want to delete ALL projects? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setLoading(true);
+      
+      // Delete all projects
       for (const project of projects) {
         if (project.id) {
           await portfolioService.deleteProject(project.id);
         }
       }
-      alert('All projects have been deleted successfully!');
-      loadData();
+      
+      // Clear the state immediately
+      setProjects([]);
+      
+      alert('All projects have been deleted successfully! The system will now use fallback configuration.');
+      
+      // Reload to verify and show empty state
+      await loadData();
     } catch (error) {
       console.error('Error clearing projects:', error);
       alert('Failed to clear all projects');
+      // Still reload to show current state
+      await loadData();
     } finally {
       setLoading(false);
     }

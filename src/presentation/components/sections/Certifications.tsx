@@ -98,15 +98,15 @@ const CertificationModal: React.FC<CertificationModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalHeader>
-        <ModalTitle className="text-2xl flex items-center gap-2">
-          <Award size={28} className="text-tokyo-purple" />
+        <ModalTitle className="text-xl sm:text-2xl flex items-center gap-2">
+          <Award size={24} className="text-tokyo-purple" />
           {certification.title}
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
-        <div className="space-y-6">
+        <div className="space-y-4">
           {certification.coverImage && (
-            <div className="relative aspect-video overflow-hidden rounded-lg bg-tokyo-bg-light">
+            <div className="relative aspect-video max-h-[180px] overflow-hidden rounded-lg bg-tokyo-bg-light">
               <img
                 src={certification.coverImage}
                 alt={certification.title}
@@ -115,37 +115,37 @@ const CertificationModal: React.FC<CertificationModalProps> = ({
             </div>
           )}
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-tokyo-fg-dark">Issued by:</span>
-              <span className="text-tokyo-cyan font-semibold">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="space-y-1">
+              <span className="text-tokyo-fg-dark text-xs">Issued by:</span>
+              <div className="text-tokyo-cyan font-semibold">
                 {certification.issuingOrganization}
-              </span>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-tokyo-fg-dark">Year:</span>
-              <span className="text-tokyo-fg font-semibold">
+            <div className="space-y-1">
+              <span className="text-tokyo-fg-dark text-xs">Year:</span>
+              <div className="text-tokyo-fg font-semibold">
                 {certification.year}
-              </span>
+              </div>
             </div>
           </div>
 
           <div>
-            <p className="text-tokyo-fg-dark leading-relaxed">
+            <p className="text-tokyo-fg-dark text-sm leading-relaxed">
               {certification.description}
             </p>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold text-tokyo-fg mb-3">
+            <h4 className="text-base font-semibold text-tokyo-fg mb-2">
               Skills Covered
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {certification.skills.map((skill, i) => (
                 <Badge
                   key={i}
                   variant="secondary"
-                  className="bg-tokyo-bg-light border-tokyo-comment/30"
+                  className="bg-tokyo-bg-light border-tokyo-comment/30 text-xs"
                 >
                   {skill}
                 </Badge>
@@ -166,9 +166,9 @@ const CertificationModal: React.FC<CertificationModalProps> = ({
                 onClick={() =>
                   window.open(certification.certificateUrl, '_blank')
                 }
-                className="bg-tokyo-purple hover:bg-tokyo-purple/80 transition-all duration-300"
+                className="bg-tokyo-purple hover:bg-tokyo-purple/80 transition-all duration-300 text-sm"
               >
-                <ExternalLink size={18} className="mr-2" />
+                <ExternalLink size={16} className="mr-2" />
                 View Certificate
               </Button>
             </motion.div>

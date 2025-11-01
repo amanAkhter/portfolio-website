@@ -70,8 +70,10 @@ export const About: React.FC<AboutProps> = ({ data, experiences, projects, certi
           <ScrollReveal>
             <div>
               <h3 className="text-2xl font-semibold text-tokyo-fg mb-4">Overview</h3>
-              <p className="text-tokyo-fg-dark leading-relaxed mb-6">{data.intro}</p>
-              <p className="text-tokyo-fg-dark leading-relaxed">{data.overview}</p>
+              <div className="space-y-4">
+                <p className="text-tokyo-fg-dark leading-relaxed whitespace-pre-line">{data.intro}</p>
+                <p className="text-tokyo-fg-dark leading-relaxed whitespace-pre-line">{data.overview}</p>
+              </div>
             </div>
           </ScrollReveal>
 
@@ -79,19 +81,23 @@ export const About: React.FC<AboutProps> = ({ data, experiences, projects, certi
             <div>
               <h3 className="text-2xl font-semibold text-tokyo-fg mb-4">Latest Positions</h3>
               <div className="space-y-4">
-                {data.latestPositions.map((position, index) => (
-                  <FadeIn key={index} delay={index * 0.1}>
-                    <motion.div 
-                      className="p-4 bg-tokyo-bg-light rounded-lg border border-tokyo-black hover:border-tokyo-blue transition-all duration-300 hover:shadow-lg hover:shadow-tokyo-blue/10"
-                      whileHover={{ x: 10 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    >
-                      <h4 className="font-semibold text-tokyo-fg">{position.title}</h4>
-                      <p className="text-tokyo-blue text-sm">{position.company}</p>
-                      <p className="text-tokyo-comment text-xs mt-1">{position.duration}</p>
-                    </motion.div>
-                  </FadeIn>
-                ))}
+                {data.latestPositions && data.latestPositions.length > 0 ? (
+                  data.latestPositions.map((position, index) => (
+                    <FadeIn key={index} delay={index * 0.1}>
+                      <motion.div 
+                        className="p-4 bg-tokyo-bg-light rounded-lg border border-tokyo-black hover:border-tokyo-blue transition-all duration-300 hover:shadow-lg hover:shadow-tokyo-blue/10"
+                        whileHover={{ x: 10 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      >
+                        <h4 className="font-semibold text-tokyo-fg">{position.title}</h4>
+                        <p className="text-tokyo-blue text-sm">{position.company}</p>
+                        <p className="text-tokyo-comment text-xs mt-1">{position.duration}</p>
+                      </motion.div>
+                    </FadeIn>
+                  ))
+                ) : (
+                  <p className="text-tokyo-comment text-sm">No positions data available</p>
+                )}
               </div>
             </div>
           </ScrollReveal>

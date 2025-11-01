@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 import { authService } from '../../core/usecases'
 import { Button } from '../components/ui'
@@ -15,21 +15,14 @@ import {
   ContactSubmissionsManager,
 } from '../components/admin'
 
-const AdminPage: React.FC = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  const handleSignOut = async () => {
-    try {
-      await authService.signOut()
-      navigate('/admin/login')
-    } catch (error) {
-      console.error('Sign out error:', error)
-    }
-  }
-
-  const menuItems = [
+// Memoized Sidebar Component
+const Sidebar = React.memo<{
+  sidebarOpen: boolean
+  setSidebarOpen: (open: boolean) => void
+  location: ReturnType<typeof useLocation>
+  handleSignOut: () => Promise<void>
+}>(({ sidebarOpen, setSidebarOpen, location, handleSignOut }) => {
+  const menuItems = useMemo(() => [
     { icon: Home, label: 'Dashboard', path: '/admin' },
     { icon: Home, label: 'Home Section', path: '/admin/home' },
     { icon: Info, label: 'About Section', path: '/admin/about' },
@@ -40,12 +33,88 @@ const AdminPage: React.FC = () => {
     { icon: GraduationCap, label: 'Education', path: '/admin/education' },
     { icon: Mail, label: 'Contact Info', path: '/admin/contact' },
     { icon: MessageSquare, label: 'Submissions', path: '/admin/submissions' },
-  ]
+  ], [])
 
-  const isActive = (path: string) => {
+  const isActive = useCallback((path: string) => {
     if (path === '/admin') return location.pathname === '/admin'
     return location.pathname.startsWith(path)
-  }
+  }, [location.pathname])
+
+  const handleLinkClick = useCallback(() => {
+    setSidebarOpen(false)
+  }, [setSidebarOpen])
+
+  return (
+    <aside className={`
+      w-64 bg-tokyo-bg-dark border-r border-tokyo-black flex flex-col
+      fixed lg:sticky lg:top-0 z-40 h-screen overflow-y-auto
+      transition-transform duration-300 ease-in-out
+      ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
+      <div className="p-6 border-b border-tokyo-black hidden lg:block">
+        <h1 className="text-2xl font-bold text-tokyo-blue">Admin Panel</h1>
+        <p className="text-tokyo-fg-dark text-sm mt-1">Portfolio Management</p>
+      </div>
+
+      <nav className="flex-1 p-4 space-y-1 mt-16 lg:mt-0">
+        {menuItems.map((item) => {
+          const Icon = item.icon
+          const active = isActive(item.path)
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={handleLinkClick}
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
+                active
+                  ? 'bg-tokyo-bg-highlight text-tokyo-blue border-l-2 border-tokyo-blue'
+                  : 'text-tokyo-fg-dark hover:bg-tokyo-bg-highlight hover:text-tokyo-blue'
+              }`}
+            >
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          )
+        })}
+      </nav>
+
+      <div className="p-4 border-t border-tokyo-black">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-tokyo-red hover:text-tokyo-red"
+          onClick={handleSignOut}
+        >
+          <LogOut className="w-5 h-5 mr-3 flex-shrink-0" />
+          Sign Out
+        </Button>
+      </div>
+    </aside>
+  )
+})
+
+Sidebar.displayName = 'Sidebar'
+
+const AdminPage: React.FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleSignOut = useCallback(async () => {
+    try {
+      await authService.signOut()
+      navigate('/admin/login')
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
+  }, [navigate])
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen(prev => !prev)
+  }, [])
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false)
+  }, [])
 
   return (
     <div className="min-h-screen bg-tokyo-bg flex">
@@ -56,7 +125,7 @@ const AdminPage: React.FC = () => {
           <p className="text-tokyo-fg-dark text-xs">Portfolio Management</p>
         </div>
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={toggleSidebar}
           className="p-2 text-tokyo-fg hover:text-tokyo-blue transition-colors"
           aria-label="Toggle menu"
         >
@@ -68,55 +137,17 @@ const AdminPage: React.FC = () => {
       {sidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setSidebarOpen(false)}
+          onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`
-        w-64 bg-tokyo-bg-dark border-r border-tokyo-black flex flex-col
-        fixed lg:sticky lg:top-0 z-40 h-screen overflow-y-auto
-        transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        <div className="p-6 border-b border-tokyo-black hidden lg:block">
-          <h1 className="text-2xl font-bold text-tokyo-blue">Admin Panel</h1>
-          <p className="text-tokyo-fg-dark text-sm mt-1">Portfolio Management</p>
-        </div>
-
-        <nav className="flex-1 p-4 space-y-1 mt-16 lg:mt-0">
-          {menuItems.map((item) => {
-            const Icon = item.icon
-            const active = isActive(item.path)
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
-                  active
-                    ? 'bg-tokyo-bg-highlight text-tokyo-blue border-l-2 border-tokyo-blue'
-                    : 'text-tokyo-fg-dark hover:bg-tokyo-bg-highlight hover:text-tokyo-blue'
-                }`}
-              >
-                <Icon className="w-5 h-5 flex-shrink-0" />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            )
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-tokyo-black">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-tokyo-red hover:text-tokyo-red"
-            onClick={handleSignOut}
-          >
-            <LogOut className="w-5 h-5 mr-3 flex-shrink-0" />
-            Sign Out
-          </Button>
-        </div>
-      </aside>
+      <Sidebar 
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        location={location}
+        handleSignOut={handleSignOut}
+      />
 
       {/* Main Content */}
       <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto pt-20 lg:pt-8">

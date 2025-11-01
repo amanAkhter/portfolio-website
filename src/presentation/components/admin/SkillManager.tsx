@@ -123,23 +123,41 @@ export const SkillManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to delete ALL skill sections and skills? This action cannot be undone.'
+      'Are you sure you want to delete ALL skill sections and skills? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setLoading(true);
+      
+      // Delete all skills first
+      for (const skill of skills) {
+        if (skill.id) {
+          await portfolioService.deleteSkill(skill.id);
+        }
+      }
+      
+      // Then delete all sections
       for (const section of sections) {
         if (section.id) {
           await portfolioService.deleteSkillSection(section.id);
         }
       }
-      alert('All skill sections have been deleted successfully!');
-      loadData();
+      
+      // Clear the state immediately
+      setSkills([]);
+      setSections([]);
+      
+      alert('All skill sections and skills have been deleted successfully! The system will now use fallback configuration.');
+      
+      // Reload to verify and show empty state
+      await loadData();
     } catch (error) {
       console.error('Error clearing skills:', error);
       alert('Failed to clear all skills');
+      // Still reload to show current state
+      await loadData();
     } finally {
       setLoading(false);
     }

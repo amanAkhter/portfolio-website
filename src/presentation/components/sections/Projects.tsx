@@ -114,14 +114,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalHeader>
-        <ModalTitle className="text-2xl">
+        <ModalTitle className="text-xl sm:text-2xl">
           {project.name}
         </ModalTitle>
       </ModalHeader>
       <ModalBody>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {project.coverImage && (
-            <div className="relative aspect-video overflow-hidden rounded-lg bg-tokyo-bg-light">
+            <div className="relative aspect-video max-h-[180px] overflow-hidden rounded-lg bg-tokyo-bg-light">
               <HolographicShimmer>
                 <img
                   src={project.coverImage}
@@ -133,22 +133,22 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           )}
 
           <div>
-            <p className="text-tokyo-fg-dark leading-relaxed">
+            <p className="text-tokyo-fg-dark text-sm leading-relaxed">
               {project.description}
             </p>
           </div>
 
           <div>
             <h4 className="text-sm font-semibold text-tokyo-fg mb-2 flex items-center gap-2">
-              <span className="w-1 h-4 bg-tokyo-blue rounded-full"></span>
+              <span className="w-1 h-3.5 bg-tokyo-blue rounded-full"></span>
               Technologies Used
             </h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {project.technologies.map((tech, i) => (
                 <Badge
                   key={i}
                   variant="secondary"
-                  className="bg-tokyo-bg-light border-tokyo-comment/30 hover:border-tokyo-blue/50 transition-colors"
+                  className="bg-tokyo-bg-light border-tokyo-comment/30 hover:border-tokyo-blue/50 transition-colors text-xs"
                 >
                   {tech}
                 </Badge>
@@ -159,7 +159,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           {project.tags && project.tags.length > 0 && (
             <div>
               <h4 className="text-sm font-semibold text-tokyo-fg mb-2 flex items-center gap-2">
-                <span className="w-1 h-4 bg-tokyo-purple rounded-full"></span>
+                <span className="w-1 h-3.5 bg-tokyo-purple rounded-full"></span>
                 Features & Highlights
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -170,11 +170,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
                       key={i}
                       className="flex items-start gap-2 p-2 rounded-lg bg-tokyo-bg-light border border-tokyo-comment/20 hover:border-tokyo-blue/50 transition-colors"
                     >
-                      <div className="p-1.5 rounded-md bg-tokyo-blue/20">
-                        <IconComponent size={16} className="text-tokyo-blue" />
+                      <div className="p-1 rounded-md bg-tokyo-blue/20">
+                        <IconComponent size={14} className="text-tokyo-blue" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-tokyo-fg text-sm truncate">
+                        <div className="font-semibold text-tokyo-fg text-xs truncate">
                           {tag.label}
                         </div>
                         <div className="text-xs text-tokyo-fg-dark truncate">
@@ -195,7 +195,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={() => window.open(project.liveUrl, '_blank')}
-                className="bg-tokyo-blue hover:bg-tokyo-blue/80 shadow-lg shadow-tokyo-blue/20 transition-all duration-300"
+                className="bg-tokyo-blue hover:bg-tokyo-blue/80 shadow-lg shadow-tokyo-blue/20 transition-all duration-300 text-sm"
               >
                 <ExternalLink size={16} className="mr-2" />
                 Live Demo
@@ -211,7 +211,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
               <Button
                 variant="outline"
                 onClick={() => window.open(project.githubUrl, '_blank')}
-                className="border-tokyo-purple/50 hover:border-tokyo-purple hover:bg-tokyo-purple/10 transition-all duration-300"
+                className="border-tokyo-purple/50 hover:border-tokyo-purple hover:bg-tokyo-purple/10 transition-all duration-300 text-sm"
               >
                 <Github size={16} className="mr-2" />
                 View Code

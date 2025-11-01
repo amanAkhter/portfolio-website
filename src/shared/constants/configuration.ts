@@ -30,16 +30,27 @@ export const homeConfig: HomeData = {
 
 // ========== ABOUT DATA ==========
 export const aboutConfig: AboutData = {
-  intro: `Hey there! 👋 I'm Alex, a passionate Full Stack Developer with 5+ years of experience building scalable, 
-  user-centric web applications. I thrive at the intersection of design and engineering, creating solutions 
-  that are both beautiful and performant. My journey in tech started with a curiosity about how things work 
-  and evolved into a career of turning complex problems into elegant solutions.`,
-  overview: `Specializing in the MERN stack and cloud technologies, I've had the privilege of working with 
-  startups and enterprises alike, architecting systems that handle millions of users. Beyond coding, I'm an 
-  active open-source contributor, tech blogger, and mentor to aspiring developers. When I'm not behind the keyboard, 
-  you'll find me exploring new technologies, attending tech meetups, or contributing to the developer community 
-  through talks and workshops. I believe in writing clean, maintainable code and building products that genuinely 
-  improve people's lives.`,
+  intro: `Hey there! 👋 I'm Alex Thompson, a passionate Full Stack Developer with 5+ years of experience building scalable, user-centric web applications that make a real difference. I thrive at the intersection of design and engineering, creating solutions that are both beautiful and performant.
+
+My journey in tech started with a simple curiosity about how websites work, which led me to write my first line of code at 16. Since then, I've transformed that curiosity into a career of turning complex business problems into elegant, efficient digital solutions. I believe that great software is not just about writing code—it's about understanding people, solving real problems, and creating experiences that users love.`,
+  
+  overview: `🚀 **What I Do**
+I specialize in the MERN stack (MongoDB, Express.js, React, Node.js) and modern cloud technologies, architecting scalable systems that handle millions of users daily. From building real-time applications to designing microservices architectures, I love tackling challenges that push the boundaries of what's possible on the web.
+
+💡 **My Approach**
+I'm a strong advocate for clean code, test-driven development, and continuous learning. Every project is an opportunity to not just deliver features, but to craft maintainable, well-documented solutions that stand the test of time. I believe in measuring twice and cutting once—investing time in proper planning and architecture always pays dividends.
+
+🌟 **Beyond Code**
+When I'm not behind the keyboard, you'll find me:
+• Contributing to open-source projects (500+ contributions on GitHub)
+• Writing technical articles on Medium and Dev.to (50K+ readers)
+• Mentoring aspiring developers through coding bootcamps
+• Speaking at tech conferences and local meetups
+• Exploring the latest in AI, blockchain, and web3 technologies
+
+🎯 **What Drives Me**
+I'm passionate about building products that genuinely improve people's lives. Whether it's a blazing-fast e-commerce platform that helps small businesses grow or a collaborative tool that makes remote teams more productive, I find fulfillment in creating technology that matters. My goal is to leave every codebase better than I found it and every team stronger than when I joined.`,
+  
   latestPositions: [
     {
       title: 'Senior Full Stack Engineer',

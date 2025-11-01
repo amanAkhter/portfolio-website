@@ -81,7 +81,21 @@ export class PortfolioService {
   // ========== HOME SERVICES ==========
   async getHomeData(): Promise<HomeData> {
     const data = await this.homeRepo.get();
-    return data || homeConfig;
+    
+    // Check if data exists and has meaningful content
+    const hasValidData = data && (
+      data.email || 
+      data.name || 
+      data.profileURL || 
+      data.resumeURL || 
+      data.greeting || 
+      data.tagline || 
+      data.description ||
+      (data.taglines && data.taglines.length > 0) ||
+      (data.socialLinks && data.socialLinks.length > 0)
+    );
+    
+    return hasValidData ? data : homeConfig;
   }
 
   async getHomeDataAdmin(): Promise<HomeData | null> {
@@ -95,7 +109,15 @@ export class PortfolioService {
   // ========== ABOUT SERVICES ==========
   async getAboutData(): Promise<AboutData> {
     const data = await this.aboutRepo.get();
-    return data || aboutConfig;
+    
+    // Check if data exists and has meaningful content
+    const hasValidData = data && (
+      data.intro || 
+      data.overview || 
+      (data.latestPositions && data.latestPositions.length > 0)
+    );
+    
+    return hasValidData ? data : aboutConfig;
   }
 
   async getAboutDataAdmin(): Promise<AboutData | null> {
@@ -285,7 +307,16 @@ export class PortfolioService {
   // ========== CONTACT SERVICES ==========
   async getContactInfo(): Promise<ContactInfo> {
     const data = await this.contactRepo.get();
-    return data || contactConfig;
+    
+    // Check if data exists and has meaningful content
+    const hasValidData = data && (
+      data.email || 
+      data.phone || 
+      data.location || 
+      (data.socialLinks && data.socialLinks.length > 0)
+    );
+    
+    return hasValidData ? data : contactConfig;
   }
 
   async getContactInfoAdmin(): Promise<ContactInfo | null> {

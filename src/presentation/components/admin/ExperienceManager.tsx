@@ -101,24 +101,33 @@ export const ExperienceManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to delete ALL experiences? This action cannot be undone.'
+      'Are you sure you want to delete ALL experiences? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setLoading(true);
+      
       // Delete all experiences
       for (const exp of experiences) {
         if (exp.id) {
           await portfolioService.deleteExperience(exp.id);
         }
       }
-      alert('All experiences have been deleted successfully!');
-      loadData();
+      
+      // Clear the state immediately
+      setExperiences([]);
+      
+      alert('All experiences have been deleted successfully! The system will now use fallback configuration.');
+      
+      // Reload to verify and show empty state
+      await loadData();
     } catch (error) {
       console.error('Error clearing experiences:', error);
       alert('Failed to clear all experiences');
+      // Still reload to show current state
+      await loadData();
     } finally {
       setLoading(false);
     }

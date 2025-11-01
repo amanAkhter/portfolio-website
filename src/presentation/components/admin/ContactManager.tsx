@@ -23,10 +23,20 @@ export const ContactManager: React.FC = () => {
     try {
       setLoading(true);
       const data = await portfolioService.getContactInfoAdmin();
-      if (data) {
-        setFormData(data);
+      
+      // Check if data exists and has meaningful content
+      const hasValidData = data && (
+        data.email || 
+        data.phone || 
+        data.location || 
+        (data.socialLinks && data.socialLinks.length > 0)
+      );
+      
+      if (hasValidData) {
+        setFormData(data!);
         setHasData(true);
       } else {
+        // No valid data, show empty state to use fallback
         setHasData(false);
       }
     } catch (error) {
@@ -73,13 +83,14 @@ export const ContactManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to clear all Contact information? This action cannot be undone.'
+      'Are you sure you want to clear all Contact information? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setSaving(true);
+      
       const emptyData: ContactInfo = {
         email: '',
         phone: '',
@@ -88,12 +99,17 @@ export const ContactManager: React.FC = () => {
       };
       
       await portfolioService.updateContactInfo(emptyData);
+      
+      // Clear the state immediately
       setFormData(emptyData);
       setHasData(false);
-      alert('All Contact information has been cleared successfully!');
+      
+      alert('All Contact information has been cleared successfully! The system will now use fallback configuration.');
     } catch (error) {
       console.error('Error clearing contact info:', error);
       alert('Failed to clear contact info');
+      // Reload to show current state
+      await loadData();
     } finally {
       setSaving(false);
     }

@@ -22,10 +22,19 @@ export const AboutManager: React.FC = () => {
     try {
       setLoading(true);
       const data = await portfolioService.getAboutDataAdmin();
-      if (data) {
-        setFormData(data);
+      
+      // Check if data exists and has meaningful content
+      const hasValidData = data && (
+        data.intro || 
+        data.overview || 
+        (data.latestPositions && data.latestPositions.length > 0)
+      );
+      
+      if (hasValidData) {
+        setFormData(data!);
         setHasData(true);
       } else {
+        // No valid data, show empty state to use fallback
         setHasData(false);
       }
     } catch (error) {
@@ -72,13 +81,14 @@ export const AboutManager: React.FC = () => {
 
   const handleClearAll = async () => {
     const confirmClear = window.confirm(
-      'Are you sure you want to clear all About section data? This action cannot be undone.'
+      'Are you sure you want to clear all About section data? This action cannot be undone. The system will fallback to default configuration.'
     );
     
     if (!confirmClear) return;
 
     try {
       setSaving(true);
+      
       const emptyData: AboutData = {
         intro: '',
         overview: '',
@@ -86,12 +96,17 @@ export const AboutManager: React.FC = () => {
       };
       
       await portfolioService.updateAboutData(emptyData);
+      
+      // Clear the state immediately
       setFormData(emptyData);
       setHasData(false);
-      alert('All About section data has been cleared successfully!');
+      
+      alert('All About section data has been cleared successfully! The system will now use fallback configuration.');
     } catch (error) {
       console.error('Error clearing about data:', error);
       alert('Failed to clear about data');
+      // Reload to show current state
+      await loadData();
     } finally {
       setSaving(false);
     }
