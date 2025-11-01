@@ -5,10 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0', // Listen on all network interfaces (enables LAN access)
+    host: '0.0.0.0',
     port: 5173,
     open: true,
     cors: true,
     strictPort: false, // Try next port if 5173 is busy
+    allowedHosts : ['.local', 'aman.akhterlabs.site'],
   },
 })
